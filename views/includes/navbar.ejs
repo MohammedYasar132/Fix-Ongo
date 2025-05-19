@@ -56,80 +56,72 @@
   >
     <div class="flex items-center space-x-3 mb-4 sm:mb-0">
       <div class="text-center">
-        <h1
-          class="inline-flex items-center font-montserrat font-extrabold text-[36px] leading-none"
-        >
-          <span class="text-white">FIX</span>
-          <svg
-            Bye
-            bye
-            class="w-12 h-12 -mb-2 -ml-2 text-[#0000C0]"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="3"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            viewBox="0 0 24 24"
-            aria-hidden="true"
-            role="img"
-            xmlns="http://www.w3.org/2000/svg"
+        <a href="/" class="inline-block">
+          <h1
+            class="inline-flex items-center font-montserrat font-extrabold text-[36px] leading-none"
           >
-            <path
-              d="M14.7 3.3 12 6l-1.5 1.5-3 3-1.5 1.5-1.5 1.5v3l3 3 3-3 1.5-1.5 3-3 1.5-1.5 2.7-2.7-3-3zM7.5 15l-3-3"
-            />
-          </svg>
-          <span class="text-orange-600">ONGO</span>
-        </h1>
+            <span class="text-white">FIX</span>
+            <svg
+              class="w-12 h-12 -mb-2 -ml-2 text-[#0000C0]"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="3"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+              role="img"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M14.7 3.3 12 6l-1.5 1.5-3 3-1.5 1.5-1.5 1.5v3l3 3 3-3 1.5-1.5 3-3 1.5-1.5 2.7-2.7-3-3zM7.5 15l-3-3"
+              />
+            </svg>
+            <span class="text-orange-600">ONGO</span>
+          </h1>
+        </a>
       </div>
     </div>
-    <ul class="flex space-x-6 text-white text-sm font-normal select-none">
+
+    <!-- Navigation links -->
+    <ul
+      class="flex flex-wrap space-x-6 text-white text-sm font-normal select-none sm:flex-nowrap"
+    >
       <li>
-        <a
-          class="hover:text-orange-500 transition-colors duration-300"
-          href="/home"
+        <a class="hover:text-orange-500 transition-colors duration-300" href="/"
+          >Home</a
         >
-          Home
-        </a>
       </li>
       <li>
         <a
           class="hover:text-orange-500 transition-colors duration-300"
           href="/aboutus"
+          >About us</a
         >
-          About us
-        </a>
       </li>
-      <!-- <li>
-        <a
-          class="hover:text-orange-500 transition-colors duration-300"
-          href="/pricing"
-        >
-          Pricing
-        </a>
-      </li> -->
       <li>
         <a
           class="hover:text-orange-500 transition-colors duration-300"
           href="/services"
+          >Services</a
         >
-          Services
-        </a>
       </li>
       <li>
         <a
           class="hover:text-orange-500 transition-colors duration-300"
           href="/contactus"
+          >Contact us</a
         >
-          Contact us
-        </a>
       </li>
     </ul>
+
     <a
       class="mt-4 sm:mt-0 bg-orange-600 hover:bg-orange-700 transition-colors duration-300 text-white text-sm font-semibold px-5 py-2 rounded select-none"
       href="/contactus#contact-form"
     >
       Get a Quote
     </a>
+
     <!-- Bottom left orange button -->
     <a
       href="/contactus#contact-form"
@@ -137,6 +129,7 @@
     >
       Repair My Device Now!
     </a>
+
     <!-- Bottom right vertical icons -->
     <div
       class="fixed bottom-4 right-4 flex flex-col items-center space-y-3 z-50"

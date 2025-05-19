@@ -94,11 +94,11 @@ app.post("/submit-form", async (req, res) => {
     });
 
     req.flash("success", "Email sent successfully!");
-    res.redirect("/home");
+    res.redirect("/");
   } catch (error) {
     console.error(error);
     req.flash("error", "Failed to send email. Please try again.");
-    res.redirect("/home");
+    res.redirect("/");
   }
 });
 
@@ -170,6 +170,11 @@ app.post("/submit-main-form", async (req, res) => {
     req.flash("error", "Failed to send email. Please try again.");
     res.redirect("/contactus");
   }
+});
+
+app.use((err, req, res, next) => {
+  let { status = 500, message = "Some Error occured" } = err;
+  res.status(status).render("error.ejs", { message });
 });
 
 app.listen(port, () => {
