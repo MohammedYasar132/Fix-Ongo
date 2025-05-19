@@ -1,0 +1,184 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>Doorstep Repair Service</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter&display=swap");
+      body {
+        font-family: "Inter", sans-serif;
+      }
+      /* Custom color for #f15a24 */
+      .custom-orange {
+        --tw-gradient-from: #f15a24;
+        --tw-gradient-to: #f15a24;
+        --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to);
+      }
+      .border-custom-orange {
+        border-color: #f15a24;
+      }
+      .focus-ring-custom-orange:focus {
+        --tw-ring-color: #f15a24;
+      }
+      /* Icon and text hover color */
+      .icon-text-group {
+        color: white;
+        transition: color 0.3s ease;
+        cursor: pointer;
+      }
+      .icon-text-group:hover {
+        color: #f15a24;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      class="min-h-screen flex items-center justify-center bg-black relative overflow-hidden"
+    >
+      <img
+        alt="Background image showing a close-up of a phone repair with tools and hands, different from the original"
+        class="absolute inset-0 w-full h-full object-cover object-center opacity-30"
+        height="600"
+        src="https://storage.googleapis.com/a1aa/image/ed419616-66d8-430f-59be-7fcc9a82d3ed.jpg"
+        width="1920"
+      />
+      <div
+        class="relative max-w-7xl w-full px-6 py-12 flex flex-col md:flex-row gap-10 md:gap-20 justify-center items-center"
+      >
+        <!-- Left side text content -->
+        <div
+          class="max-w-xl text-center md:text-left text-white flex flex-col gap-6 md:gap-8"
+        >
+          <h1
+            class="font-extrabold text-3xl sm:text-4xl md:text-5xl leading-tight"
+          >
+            India’s First
+            <br />
+            Doorstep Repair Service
+            <br />
+            Provider
+          </h1>
+          <div class="w-16 h-0.5 bg-[#f15a24] mx-auto md:mx-0"></div>
+          <p class="text-sm sm:text-base font-normal max-w-md mx-auto md:mx-0">
+            Get Convenient, Transparent, and Affordable iPhone repairs right at
+            your doorstep, completed in just 30 minutes.
+          </p>
+          <div
+            class="flex justify-center md:justify-start gap-12 mt-6 text-center"
+          >
+            <div class="flex flex-col items-center gap-2 icon-text-group">
+              <i class="far fa-calendar-alt text-2xl"> </i>
+              <span class="font-bold text-sm"> 7 Days </span>
+            </div>
+            <div class="flex flex-col items-center gap-2 icon-text-group">
+              <i class="far fa-clock text-2xl"> </i>
+              <span class="font-bold text-sm"> 10am to 9pm </span>
+            </div>
+            <div class="flex flex-col items-center gap-2 icon-text-group">
+              <i class="fas fa-phone-alt text-2xl"> </i>
+              <span class="font-bold text-sm"> 8010969696 </span>
+            </div>
+          </div>
+        </div>
+        <!-- Right side form -->
+        <form
+          aria-label="Contact form"
+          class="bg-white rounded-lg shadow-lg p-8 w-full max-w-md flex flex-col gap-4"
+        >
+          <div class="text-center mb-4">
+            <p class="font-semibold text-base">
+              Get ready,
+              <br />
+              <span class="border-b-2 border-[#f15a24] pb-1 inline-block">
+                We will contact you shortly!
+              </span>
+            </p>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            <input
+              class="border border-gray-300 rounded-md px-3 py-2 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f15a24]"
+              placeholder="Name"
+              required=""
+              type="text"
+            />
+            <input
+              class="border border-gray-300 rounded-md px-3 py-2 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f15a24]"
+              placeholder="Phone no."
+              required=""
+              type="tel"
+            />
+            <select
+              class="border border-gray-300 rounded-md px-3 py-2 text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#f15a24]"
+              required=""
+            >
+              <option disabled="" selected="">Select device</option>
+              <option>iPhone</option>
+              <option>iPad</option>
+              <option>MacBook</option>
+              <option>Other</option>
+            </select>
+            <select
+              class="border border-gray-300 rounded-md px-3 py-2 text-gray-600 focus:outline-none focus:ring-2 focus:ring-[#f15a24]"
+              required=""
+            >
+              <option disabled="" selected="">Select brand</option>
+              <option>Apple</option>
+              <option>Samsung</option>
+              <option>OnePlus</option>
+              <option>Other</option>
+            </select>
+            <input
+              class="border border-gray-300 rounded-md px-3 py-2 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f15a24]"
+              placeholder="Enter device model"
+              type="text"
+            />
+            <input
+              class="border border-gray-300 rounded-md px-3 py-2 text-gray-600 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[#f15a24]"
+              placeholder="Enter device faults"
+              type="text"
+            />
+          </div>
+          <select
+            class="border border-gray-300 rounded-md px-3 py-2 text-gray-600 mt-2 focus:outline-none focus:ring-2 focus:ring-[#f15a24]"
+            required=""
+          >
+            <option disabled="" selected="">Select your city</option>
+            <option>Delhi</option>
+            <option>Mumbai</option>
+            <option>Bangalore</option>
+            <option>Chennai</option>
+            <option>Kolkata</option>
+            <option>Other</option>
+          </select>
+          <div
+            class="flex flex-wrap justify-center sm:justify-start gap-4 mt-4 text-gray-800 text-sm"
+          >
+            <div class="flex items-center gap-1">
+              <i class="fas fa-check text-[#f15a24]"> </i>
+              <span> Doorstep Repair </span>
+            </div>
+            <div class="flex items-center gap-1">
+              <i class="fas fa-check text-[#f15a24]"> </i>
+              <span> Secure &amp; Trusted </span>
+            </div>
+            <div class="flex items-center gap-1">
+              <i class="fas fa-check text-[#f15a24]"> </i>
+              <span> 10 Years of Trusted Service </span>
+            </div>
+          </div>
+          <button
+            class="mt-6 w-full bg-gradient-to-r from-[#f15a24] to-[#f15a24] text-white font-medium rounded-md py-3 hover:opacity-90 transition"
+            type="submit"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+  </body>
+</html>

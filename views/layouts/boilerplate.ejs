@@ -1,0 +1,39 @@
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1" name="viewport" />
+    <title>TechPro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&amp;display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="css/styles.css" />
+    <style></style>
+  </head>
+  <body class="bg-white text-black">
+    <!-- Navbar -->
+    <%- include("../includes/navbar.ejs") %>
+    <!--  -->
+    <%- body -%>
+    <!--  -->
+    <!-- Footer -->
+    <%- include("../includes/footer.ejs") %>
+    <script src="/js/script.js"></script>
+    <script>
+      setTimeout(() => {
+        const msg = document.querySelector(".flash-message");
+        if (msg) {
+          msg.style.transition = "opacity 0.5s";
+          msg.style.opacity = 0;
+          setTimeout(() => msg.remove(), 500);
+        }
+      }, 3000);
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.3.1/dist/js/tom-select.complete.min.js"></script>
+  </body>
+</html>
