@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 8080;
+const port = process.env.PORT || 3000;
 const path = require("path");
 const ejsMate = require("ejs-mate");
 const nodemailer = require("nodemailer");
@@ -173,5 +173,5 @@ app.post("/submit-main-form", async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log("Server is running on port 3000");
+  console.log(`Server running on port ${port}`);
 });
