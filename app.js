@@ -9,7 +9,21 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 const session = require("express-session");
 const flash = require("connect-flash");
-const MongoStore = require('connect-mongo');
+const MongoStore = require("connect-mongo");
+const mongoose = require("mongoose");
+
+
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  ssl: true,
+});
+
+mongoose.connect(process.env.MONGO_URL, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  serverSelectionTimeoutMS: 5000, // optional
+});
 
 app.use(
   session({
