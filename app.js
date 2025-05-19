@@ -9,6 +9,7 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 const session = require("express-session");
 const flash = require("connect-flash");
+const MongoStore = require('connect-mongo');
 
 app.use(
   session({
