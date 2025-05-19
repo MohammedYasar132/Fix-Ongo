@@ -15,6 +15,9 @@ app.use(
     secret: "mysecretkey",
     resave: false,
     saveUninitialized: true,
+    store: MongoStore.create({
+      mongoUrl: process.env.MONGO_URL, // Example: mongodb+srv://username:password@cluster.mongodb.net/dbname
+    }),
   })
 );
 app.use(flash());
