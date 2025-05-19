@@ -1,6 +1,5 @@
 const express = require("express");
 const app = express();
-const port = process.env.PORT || 3000;
 const path = require("path");
 const ejsMate = require("ejs-mate");
 const nodemailer = require("nodemailer");
@@ -9,30 +8,13 @@ const bodyParser = require("body-parser");
 require("dotenv").config();
 const session = require("express-session");
 const flash = require("connect-flash");
-const MongoStore = require("connect-mongo");
-const mongoose = require("mongoose");
-
-
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  ssl: true,
-});
-
-mongoose.connect(process.env.MONGO_URL, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-  serverSelectionTimeoutMS: 5000, // optional
-});
+const port = process.env.PORT || 3000;
 
 app.use(
   session({
     secret: "mysecretkey",
     resave: false,
     saveUninitialized: true,
-    store: MongoStore.create({
-      mongoUrl: process.env.MONGO_URL, // Example: mongodb+srv://username:password@cluster.mongodb.net/dbname
-    }),
   })
 );
 app.use(flash());
