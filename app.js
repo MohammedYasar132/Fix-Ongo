@@ -83,7 +83,7 @@ app.post("/submit-form", async (req, res) => {
 
     await transporter.sendMail({
       from: `"Website Contact" <${process.env.GMAIL_USER}>`,
-      to: "sakabnouman@gmail.com",
+      to: "fixongobanglore@gmail.com",
       subject: "New Contact Form Submission",
       html: `
         <p><strong>Name:</strong> ${name}</p>
@@ -159,7 +159,7 @@ app.post("/submit-main-form", async (req, res) => {
     // Send mail
     await transporter.sendMail({
       from: `"Website Contact" <${process.env.GMAIL_USER}>`,
-      to: "sakabnouman@gmail.com",
+      to: "fixongobanglore@gmail.com",
       subject: "New Repair Request",
       html: output,
     });
