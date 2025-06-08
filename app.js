@@ -172,6 +172,15 @@ app.post("/submit-main-form", async (req, res) => {
   }
 });
 
+app.get('/sitemap.xml', (req, res) => {
+  res.sendFile(__dirname + '/public/sitemap.xml', {
+    headers: {
+      'Content-Type': 'application/xml'
+    }
+  });
+});
+
+
 app.use((err, req, res, next) => {
   let { status = 500, message = "Some Error occured" } = err;
   res.status(status).render("error.ejs", { message });
