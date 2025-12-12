@@ -71,8 +71,6 @@ app.get("/test", (req, res) => {
 app.post("/submit-form", async (req, res) => {
   const { name, email, phone, message } = req.body;
   console.log(name, phone, email, message);
-// main page ..................... (Just added ) 
-
   try {
     const transporter = nodemailer.createTransport({
       service: "gmail",
