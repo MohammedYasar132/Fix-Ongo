@@ -73,15 +73,12 @@ app.post("/submit-form", async (req, res) => {
   console.log(name, phone, email, message);
   try {
     const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS,
-  },
-});
-
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS, // use App Password if 2FA enabled
+      },
+    });
 
     await transporter.sendMail({
       from: `"Website Contact" <${process.env.GMAIL_USER}>`,
@@ -150,16 +147,13 @@ app.post("/submit-main-form", async (req, res) => {
 
   try {
     // Transporter setup
-    const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
-  auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS,
-  },
-});
-
+    let transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: process.env.GMAIL_USER,
+        pass: process.env.GMAIL_PASS, // use App Password if 2FA enabled
+      },
+    });
 
     // Send mail
     await transporter.sendMail({
