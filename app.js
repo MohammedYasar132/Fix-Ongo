@@ -73,12 +73,15 @@ app.post("/submit-form", async (req, res) => {
   console.log(name, phone, email, message);
   try {
     const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS, // use App Password if 2FA enabled
-      },
-    });
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
+    auth: {
+      user: process.env.GMAIL_USER,
+      pass: process.env.GMAIL_PASS,
+    },
+  });
+
 
     await transporter.sendMail({
       from: `"Website Contact" <${process.env.GMAIL_USER}>`,
@@ -104,30 +107,8 @@ app.post("/submit-form", async (req, res) => {
 // Contact form for the contact us page
 
 app.post("/submit-main-form", async (req, res) => {
-  const {
-    name,
-    phone,
-    email,
-    device,
-    brand,
-    issue,
-    model,
-    address,
-    faults,
-    area,
-  } = req.body;
-  console.log(
-    name,
-    phone,
-    email,
-    device,
-    brand,
-    issue,
-    model,
-    address,
-    faults,
-    area
-  );
+  const { name, phone, email, device, brand, issue, model, address, faults, area } = req.body;
+  console.log(name, phone, email, device, brand, issue, model, address, faults, area);
 
   const output = `
     <h3>New Repair Request Received</h3>
@@ -146,27 +127,28 @@ app.post("/submit-main-form", async (req, res) => {
   `;
 
   try {
-    // Transporter setup
-    let transporter = nodemailer.createTransport({
-      service: "gmail",
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 465,
+      secure: true,
       auth: {
         user: process.env.GMAIL_USER,
-        pass: process.env.GMAIL_PASS, // use App Password if 2FA enabled
+        pass: process.env.GMAIL_PASS,
       },
     });
 
-    // Send mail
     await transporter.sendMail({
       from: `"Website Contact" <${process.env.GMAIL_USER}>`,
       to: "fixongobanglore@gmail.com",
       subject: "New Repair Request",
       html: output,
     });
+
     req.flash("success", "Email sent successfully!");
     res.redirect("/contactus");
   } catch (error) {
     console.error(error);
-    req.flash("error", "Failed to send email. Please try again.");
+    req.flash("error", "Failed to send email.");
     res.redirect("/contactus");
   }
 });
