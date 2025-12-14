@@ -59,16 +59,16 @@ if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
 }
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
-  secure: false, // TLS
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true, // ✅ REQUIRED for 465
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS,
   },
-  tls: {
-    rejectUnauthorized: false,
-  },
+  connectionTimeout: 10000,
 });
+
 
 // Verify SMTP
 transporter.verify((err) => {
@@ -78,6 +78,7 @@ transporter.verify((err) => {
     console.log("✅ SMTP Server is ready to send emails");
   }
 });
+
 
 /* ======================
    CONTACT FORM
