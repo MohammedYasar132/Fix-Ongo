@@ -52,23 +52,25 @@ app.get("/services", (req, res) => res.render("services.ejs"));
 app.get("/test", (req, res) => res.render("test.ejs"));
 
 /* ======================
-   NODEMAILER SETUP
+   NODEMAILER SETUP (FIXED FOR RENDER)
 ====================== */
 if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
   console.error("❌ Gmail credentials missing in environment variables");
 }
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true,
+  service: "gmail",
+  secure: false, // TLS
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS,
   },
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
-// Verify SMTP once at startup
+// Verify SMTP
 transporter.verify((err) => {
   if (err) {
     console.error("❌ SMTP Error:", err);
@@ -78,7 +80,7 @@ transporter.verify((err) => {
 });
 
 /* ======================
-   CONTACT FORM (ALL PAGES)
+   CONTACT FORM
 ====================== */
 app.post("/submit-form", async (req, res) => {
   const { name, email, phone, message } = req.body;
