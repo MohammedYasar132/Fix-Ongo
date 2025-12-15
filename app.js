@@ -7,6 +7,7 @@ const cors = require("cors");
 require("dotenv").config();
 const session = require("express-session");
 const flash = require("connect-flash");
+const { google } = require("googleapis");
 
 const port = process.env.PORT || 3000;
 
@@ -52,30 +53,44 @@ app.get("/services", (req, res) => res.render("services.ejs"));
 app.get("/test", (req, res) => res.render("test.ejs"));
 
 /* ======================
-   NODEMAILER SETUP (BREVO)
+   GOOGLE OAUTH2 SETUP
 ====================== */
-if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
-  console.error("❌ Brevo SMTP credentials missing in environment variables");
+if (
+  !process.env.GMAIL_USER ||
+  !process.env.GOOGLE_CLIENT_ID ||
+  !process.env.GOOGLE_CLIENT_SECRET ||
+  !process.env.GOOGLE_REFRESH_TOKEN
+) {
+  console.error("❌ Google OAuth credentials missing in .env");
 }
 
-const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,  // smtp-relay.brevo.com
-  port: process.env.SMTP_PORT,  // 587
-  secure: false,                // TLS false for port 587
-  auth: {
-    user: process.env.SMTP_USER, // 'apikey'
-    pass: process.env.SMTP_PASS, // Brevo SMTP password
-  },
+const OAuth2 = google.auth.OAuth2;
+
+const oauth2Client = new OAuth2(
+  process.env.GOOGLE_CLIENT_ID,
+  process.env.GOOGLE_CLIENT_SECRET,
+  "https://developers.google.com/oauthplayground"
+);
+
+oauth2Client.setCredentials({
+  refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
 });
 
-// Verify SMTP connection
-transporter.verify((err) => {
-  if (err) {
-    console.error("❌ SMTP Error:", err);
-  } else {
-    console.log("✅ Brevo SMTP is ready to send emails");
-  }
-});
+async function createTransporter() {
+  const accessToken = await oauth2Client.getAccessToken();
+
+  return nodemailer.createTransport({
+    service: "gmail",
+    auth: {
+      type: "OAuth2",
+      user: process.env.GMAIL_USER,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+      refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
+      accessToken: accessToken.token,
+    },
+  });
+}
 
 /* ======================
    CONTACT FORM
@@ -85,8 +100,10 @@ app.post("/submit-form", async (req, res) => {
   console.log("Form Data:", name, phone, email, message);
 
   try {
+    const transporter = await createTransporter();
+
     await transporter.sendMail({
-      from: `"Fixongo - Mobile Repair Service" <fixongobanglore@gmail.com>`,
+      from: `"Fixongo - Mobile Repair Service" <${process.env.GMAIL_USER}>`,
       to: "fixongobanglore@gmail.com",
       subject: "New Contact Form Submission",
       html: `
@@ -112,12 +129,13 @@ app.post("/submit-form", async (req, res) => {
 ====================== */
 app.post("/submit-main-form", async (req, res) => {
   const { name, phone, email, device, brand, issue, model, address, faults, area } = req.body;
-
   console.log("Repair Request:", name, phone, email);
 
   try {
+    const transporter = await createTransporter();
+
     await transporter.sendMail({
-      from: `"Fixongo - Mobile Repair Service" <fixongobanglore@gmail.com>`,
+      from: `"Fixongo - Mobile Repair Service" <${process.env.GMAIL_USER}>`,
       to: "fixongobanglore@gmail.com",
       subject: "New Repair Request",
       html: `
