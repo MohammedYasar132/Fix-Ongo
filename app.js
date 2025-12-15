@@ -2,21 +2,28 @@ const express = require("express");
 const app = express();
 const path = require("path");
 const ejsMate = require("ejs-mate");
-const nodemailer = require("nodemailer");
 const cors = require("cors");
 require("dotenv").config();
 const session = require("express-session");
 const flash = require("connect-flash");
-const { google } = require("googleapis");
+const twilio = require("twilio");
 
 const port = process.env.PORT || 3000;
+
+/* ======================
+   TWILIO CLIENT
+====================== */
+const client = twilio(
+  process.env.TWILIO_ACCOUNT_SID,
+  process.env.TWILIO_AUTH_TOKEN
+);
 
 /* ======================
    SESSION & FLASH
 ====================== */
 app.use(
   session({
-    secret: "mysecretkey",
+    secret: process.env.SESSION_SECRET || "fixongo_secret",
     resave: false,
     saveUninitialized: true,
   })
@@ -38,6 +45,9 @@ app.use(express.json());
 app.use(cors());
 app.use(express.static(path.join(__dirname, "public")));
 
+/* ======================
+   VIEW ENGINE
+====================== */
 app.engine("ejs", ejsMate);
 app.set("view engine", "ejs");
 app.set("views", path.join(__dirname, "views"));
@@ -53,113 +63,83 @@ app.get("/services", (req, res) => res.render("services.ejs"));
 app.get("/test", (req, res) => res.render("test.ejs"));
 
 /* ======================
-   GOOGLE OAUTH2 SETUP
-====================== */
-if (
-  !process.env.GMAIL_USER ||
-  !process.env.GOOGLE_CLIENT_ID ||
-  !process.env.GOOGLE_CLIENT_SECRET ||
-  !process.env.GOOGLE_REFRESH_TOKEN
-) {
-  console.error("❌ Google OAuth credentials missing in .env");
-}
-
-const OAuth2 = google.auth.OAuth2;
-
-const oauth2Client = new OAuth2(
-  process.env.GOOGLE_CLIENT_ID,
-  process.env.GOOGLE_CLIENT_SECRET,
-  "https://developers.google.com/oauthplayground"
-);
-
-oauth2Client.setCredentials({
-  refresh_token: process.env.GOOGLE_REFRESH_TOKEN,
-});
-
-async function createTransporter() {
-  const accessToken = await oauth2Client.getAccessToken();
-
-  return nodemailer.createTransport({
-    service: "gmail",
-    auth: {
-      type: "OAuth2",
-      user: process.env.GMAIL_USER,
-      clientId: process.env.GOOGLE_CLIENT_ID,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-      refreshToken: process.env.GOOGLE_REFRESH_TOKEN,
-      accessToken: accessToken.token,
-    },
-  });
-}
-
-/* ======================
-   CONTACT FORM
+   CONTACT / QUOTE FORM → WHATSAPP
 ====================== */
 app.post("/submit-form", async (req, res) => {
-  const { name, email, phone, message } = req.body;
-  console.log("Form Data:", name, phone, email, message);
+  const { name, phone, email, message } = req.body;
+
+  const whatsappMessage = `
+📩 *New Contact / Quote Request - Fixongo*
+
+👤 Name: ${name}
+📞 Phone: ${phone}
+📧 Email: ${email}
+💬 Message: ${message}
+  `;
 
   try {
-    const transporter = await createTransporter();
-
-    await transporter.sendMail({
-      from: `"Fixongo - Mobile Repair Service" <${process.env.GMAIL_USER}>`,
-      to: "fixongobanglore@gmail.com",
-      subject: "New Contact Form Submission",
-      html: `
-        <h3>New Contact Message</h3>
-        <p><strong>Name:</strong> ${name}</p>
-        <p><strong>Email:</strong> ${email}</p>
-        <p><strong>Phone:</strong> ${phone}</p>
-        <p><strong>Message:</strong> ${message}</p>
-      `,
+    await client.messages.create({
+      from: process.env.TWILIO_WHATSAPP_NUMBER,
+      to: process.env.MY_WHATSAPP_NUMBER,
+      body: whatsappMessage,
     });
 
-    req.flash("success", "Email sent successfully!");
-    res.redirect("/");
-  } catch (err) {
-    console.error("❌ Email Error:", err);
-    req.flash("error", "Failed to send email. Please try again.");
+    req.flash("success", "Message sent successfully via WhatsApp!");
+    res.redirect("/"); // redirect to homepage or desired page
+  } catch (error) {
+    console.error("❌ WhatsApp Error:", error);
+    req.flash("error", "Failed to send WhatsApp message.");
     res.redirect("/");
   }
 });
 
 /* ======================
-   MAIN REPAIR FORM
+   MAIN REPAIR FORM → WHATSAPP
 ====================== */
 app.post("/submit-main-form", async (req, res) => {
-  const { name, phone, email, device, brand, issue, model, address, faults, area } = req.body;
-  console.log("Repair Request:", name, phone, email);
+  const {
+    name,
+    phone,
+    email,
+    device,
+    brand,
+    issue,
+    model,
+    address,
+    faults,
+    area,
+  } = req.body;
+
+  const whatsappMessage = `
+📱 *New Repair Request - Fixongo*
+
+👤 Name: ${name}
+📞 Phone: ${phone}
+📧 Email: ${email}
+📲 Device: ${device}
+🏷 Brand: ${brand}
+⚠ Issue: ${issue}
+📦 Model: ${model}
+🏠 Address: ${address}
+📍 Area: ${area}
+🛠 Faults: ${faults}
+  `;
 
   try {
-    const transporter = await createTransporter();
-
-    await transporter.sendMail({
-      from: `"Fixongo - Mobile Repair Service" <${process.env.GMAIL_USER}>`,
-      to: "fixongobanglore@gmail.com",
-      subject: "New Repair Request",
-      html: `
-        <h3>New Repair Request</h3>
-        <ul>
-          <li><strong>Name:</strong> ${name}</li>
-          <li><strong>Phone:</strong> ${phone}</li>
-          <li><strong>Email:</strong> ${email}</li>
-          <li><strong>Device:</strong> ${device}</li>
-          <li><strong>Brand:</strong> ${brand}</li>
-          <li><strong>Issue:</strong> ${issue}</li>
-          <li><strong>Model:</strong> ${model}</li>
-          <li><strong>Address:</strong> ${address}</li>
-          <li><strong>Faults:</strong> ${faults}</li>
-          <li><strong>Area:</strong> ${area}</li>
-        </ul>
-      `,
+    await client.messages.create({
+      from: process.env.TWILIO_WHATSAPP_NUMBER,
+      to: process.env.MY_WHATSAPP_NUMBER,
+      body: whatsappMessage,
     });
 
-    req.flash("success", "Repair request sent successfully!");
+    req.flash(
+      "success",
+      "Repair request sent successfully! We will contact you shortly."
+    );
     res.redirect("/contactus");
-  } catch (err) {
-    console.error("❌ Email Error:", err);
-    req.flash("error", "Failed to send repair request.");
+  } catch (error) {
+    console.error("❌ WhatsApp Error:", error);
+    req.flash("error", "Failed to send WhatsApp message.");
     res.redirect("/contactus");
   }
 });
@@ -178,7 +158,9 @@ app.get("/sitemap.xml", (req, res) => {
 ====================== */
 app.use((err, req, res, next) => {
   console.error(err);
-  res.status(500).render("error.ejs", { message: "Something went wrong" });
+  res.status(500).render("error.ejs", {
+    message: "Something went wrong",
+  });
 });
 
 /* ======================
