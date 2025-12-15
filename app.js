@@ -49,36 +49,30 @@ app.get("/aboutus", (req, res) => res.render("aboutus.ejs"));
 app.get("/contactus", (req, res) => res.render("contactus.ejs"));
 app.get("/pricing", (req, res) => res.render("pricing.ejs"));
 app.get("/services", (req, res) => res.render("services.ejs"));
-app.get("/test", (req, res) => res.render("test.ejs"));
 
 /* ======================
-   NODEMAILER SETUP (FIXED FOR RENDER)
+   NODEMAILER (GMAIL)
 ====================== */
 if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
-  console.error("❌ Gmail credentials missing in environment variables");
+  console.error("❌ Gmail credentials missing in .env");
 }
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 465,
-  secure: true, // ✅ REQUIRED for 465
+  service: "gmail",
   auth: {
     user: process.env.GMAIL_USER,
     pass: process.env.GMAIL_PASS,
   },
-  connectionTimeout: 10000,
 });
-
 
 // Verify SMTP
 transporter.verify((err) => {
   if (err) {
     console.error("❌ SMTP Error:", err);
   } else {
-    console.log("✅ SMTP Server is ready to send emails");
+    console.log("✅ Gmail SMTP is ready");
   }
 });
-
 
 /* ======================
    CONTACT FORM
@@ -89,7 +83,7 @@ app.post("/submit-form", async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: `"FixOngo Website" <${process.env.GMAIL_USER}>`,
+      from: `"Fixongo - Mobile Repair Service" <${process.env.GMAIL_USER}>`,
       to: "fixongobanglore@gmail.com",
       subject: "New Contact Form Submission",
       html: `
@@ -105,7 +99,7 @@ app.post("/submit-form", async (req, res) => {
     res.redirect("/");
   } catch (err) {
     console.error("❌ Email Error:", err);
-    req.flash("error", "Failed to send email. Please try again.");
+    req.flash("error", "Failed to send email");
     res.redirect("/");
   }
 });
@@ -116,11 +110,9 @@ app.post("/submit-form", async (req, res) => {
 app.post("/submit-main-form", async (req, res) => {
   const { name, phone, email, device, brand, issue, model, address, faults, area } = req.body;
 
-  console.log("Repair Request:", name, phone, email);
-
   try {
     await transporter.sendMail({
-      from: `"FixOngo Website" <${process.env.GMAIL_USER}>`,
+      from: `"Fixongo - Mobile Repair Service" <${process.env.GMAIL_USER}>`,
       to: "fixongobanglore@gmail.com",
       subject: "New Repair Request",
       html: `
@@ -144,26 +136,9 @@ app.post("/submit-main-form", async (req, res) => {
     res.redirect("/contactus");
   } catch (err) {
     console.error("❌ Email Error:", err);
-    req.flash("error", "Failed to send repair request.");
+    req.flash("error", "Failed to send repair request");
     res.redirect("/contactus");
   }
-});
-
-/* ======================
-   SITEMAP
-====================== */
-app.get("/sitemap.xml", (req, res) => {
-  res.sendFile(path.join(__dirname, "public", "sitemap.xml"), {
-    headers: { "Content-Type": "application/xml" },
-  });
-});
-
-/* ======================
-   ERROR HANDLER
-====================== */
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).render("error.ejs", { message: "Something went wrong" });
 });
 
 /* ======================
