@@ -49,28 +49,31 @@ app.get("/aboutus", (req, res) => res.render("aboutus.ejs"));
 app.get("/contactus", (req, res) => res.render("contactus.ejs"));
 app.get("/pricing", (req, res) => res.render("pricing.ejs"));
 app.get("/services", (req, res) => res.render("services.ejs"));
+app.get("/test", (req, res) => res.render("test.ejs"));
 
 /* ======================
-   NODEMAILER (GMAIL)
+   NODEMAILER SETUP (BREVO)
 ====================== */
-if (!process.env.GMAIL_USER || !process.env.GMAIL_PASS) {
-  console.error("❌ Gmail credentials missing in .env");
+if (!process.env.SMTP_HOST || !process.env.SMTP_USER || !process.env.SMTP_PASS) {
+  console.error("❌ Brevo SMTP credentials missing in environment variables");
 }
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: process.env.SMTP_HOST,  // smtp-relay.brevo.com
+  port: process.env.SMTP_PORT,  // 587
+  secure: false,                // TLS false for port 587
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_PASS,
+    user: process.env.SMTP_USER, // 'apikey'
+    pass: process.env.SMTP_PASS, // Brevo SMTP password
   },
 });
 
-// Verify SMTP
+// Verify SMTP connection
 transporter.verify((err) => {
   if (err) {
     console.error("❌ SMTP Error:", err);
   } else {
-    console.log("✅ Gmail SMTP is ready");
+    console.log("✅ Brevo SMTP is ready to send emails");
   }
 });
 
@@ -83,7 +86,7 @@ app.post("/submit-form", async (req, res) => {
 
   try {
     await transporter.sendMail({
-      from: `"Fixongo - Mobile Repair Service" <${process.env.GMAIL_USER}>`,
+      from: `"Fixongo - Mobile Repair Service" <fixongobanglore@gmail.com>`,
       to: "fixongobanglore@gmail.com",
       subject: "New Contact Form Submission",
       html: `
@@ -99,7 +102,7 @@ app.post("/submit-form", async (req, res) => {
     res.redirect("/");
   } catch (err) {
     console.error("❌ Email Error:", err);
-    req.flash("error", "Failed to send email");
+    req.flash("error", "Failed to send email. Please try again.");
     res.redirect("/");
   }
 });
@@ -109,11 +112,12 @@ app.post("/submit-form", async (req, res) => {
 ====================== */
 app.post("/submit-main-form", async (req, res) => {
   const { name, phone, email, device, brand, issue, model, address, faults, area } = req.body;
-  console.log("Main Form Data : " ,  name, phone, email, device, brand, issue, model, address, faults, area);
+
+  console.log("Repair Request:", name, phone, email);
 
   try {
     await transporter.sendMail({
-      from: `"Fixongo - Mobile Repair Service" <${process.env.GMAIL_USER}>`,
+      from: `"Fixongo - Mobile Repair Service" <fixongobanglore@gmail.com>`,
       to: "fixongobanglore@gmail.com",
       subject: "New Repair Request",
       html: `
@@ -137,11 +141,27 @@ app.post("/submit-main-form", async (req, res) => {
     res.redirect("/contactus");
   } catch (err) {
     console.error("❌ Email Error:", err);
-    req.flash("error", "Failed to send repair request");
+    req.flash("error", "Failed to send repair request.");
     res.redirect("/contactus");
   }
 });
-//
+
+/* ======================
+   SITEMAP
+====================== */
+app.get("/sitemap.xml", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "sitemap.xml"), {
+    headers: { "Content-Type": "application/xml" },
+  });
+});
+
+/* ======================
+   ERROR HANDLER
+====================== */
+app.use((err, req, res, next) => {
+  console.error(err);
+  res.status(500).render("error.ejs", { message: "Something went wrong" });
+});
 
 /* ======================
    SERVER
