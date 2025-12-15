@@ -109,6 +109,7 @@ app.post("/submit-form", async (req, res) => {
 ====================== */
 app.post("/submit-main-form", async (req, res) => {
   const { name, phone, email, device, brand, issue, model, address, faults, area } = req.body;
+  console.log("Main Form Data : " ,  name, phone, email, device, brand, issue, model, address, faults, area);
 
   try {
     await transporter.sendMail({
