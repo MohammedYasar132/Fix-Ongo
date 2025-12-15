@@ -1775,7 +1775,36 @@
         }
       }, 3000);
     </script>
-    <script src="/js/script.js"></script>
+    <script src="/js/script.js">
+      document.getElementById("quoteForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+
+    const name = document.querySelector('[name="name"]').value;
+    const phone = document.querySelector('[name="phone"]').value;
+    const email = document.querySelector('[name="email"]').value;
+    const messageText = document.querySelector('[name="message"]').value;
+
+    const message = `
+📩 *New Quote Request – Fixongo*
+
+👤 Name: ${name}
+📞 Phone: ${phone}
+📧 Email: ${email}
+
+📝 Message:
+${messageText}
+`;
+
+    const whatsappNumber = "918270455245"; // 🔴 Replace with your WhatsApp number
+    const whatsappURL =
+      "https://wa.me/" +
+      whatsappNumber +
+      "?text=" +
+      encodeURIComponent(message);
+
+    window.open(whatsappURL, "_blank");
+  });
+    </script>
     <%- include("./includes/footer.ejs") %>
   </body>
 </html>
